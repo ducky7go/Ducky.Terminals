@@ -1,0 +1,8 @@
+﻿<Solution>
+  <Folder Name="/.etc/">
+    <File Path="Directory.Build.props" />
+    <File Path="nuget.config" />
+  </Folder>
+  <Project Path="Ducky.DemoTerminalClient\Ducky.DemoTerminalClient.csproj" />
+  <Project Path="Ducky.TerminalUI\Ducky.TerminalUI.csproj" />
+</Solution>
