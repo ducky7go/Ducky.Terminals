@@ -137,6 +137,48 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
     }
 
     /// <summary>
+    /// 创建圆形 Sprite
+    /// </summary>
+    private static Sprite CreateCircleSprite(int resolution)
+    {
+        int center = resolution / 2;
+        float radius = center - 1;
+        
+        Texture2D texture = new Texture2D(resolution, resolution);
+        Color[] pixels = new Color[resolution * resolution];
+        
+        for (int y = 0; y < resolution; y++)
+        {
+            for (int x = 0; x < resolution; x++)
+            {
+                float dx = x - center;
+                float dy = y - center;
+                float distance = Mathf.Sqrt(dx * dx + dy * dy);
+                
+                // 抗锯齿：边缘1像素做渐变
+                if (distance <= radius - 1)
+                {
+                    pixels[y * resolution + x] = Color.white;
+                }
+                else if (distance <= radius)
+                {
+                    float alpha = radius - distance;
+                    pixels[y * resolution + x] = new Color(1, 1, 1, alpha);
+                }
+                else
+                {
+                    pixels[y * resolution + x] = Color.clear;
+                }
+            }
+        }
+        
+        texture.SetPixels(pixels);
+        texture.Apply();
+        
+        return Sprite.Create(texture, new Rect(0, 0, resolution, resolution), new Vector2(0.5f, 0.5f));
+    }
+
+    /// <summary>
     /// 创建UI结构的静态工厂方法
     /// </summary>
     internal static TerminalHandlerView Create(Canvas canvas, TerminalMainView mainView)
@@ -176,13 +218,15 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
         Image circleImage = circleObj.AddComponent<Image>();
         circleImage.color = new Color(0.2f, 0.6f, 1f, 0.8f); // 蓝色半透明
         circleImage.raycastTarget = true; // 确保按钮可以接收点击
+        
+        // 创建圆形 Sprite
+        circleImage.sprite = CreateCircleSprite(60);
+        circleImage.type = Image.Type.Simple;
+        circleImage.preserveAspect = true;
 
         Button button = circleObj.AddComponent<Button>();
 
         Log.Info("[TerminalHandlerView] Circle button created");
-
-        // 使圆圈看起来像圆形（简单方式，可以用Sprite替代）
-        // 注：实际使用时建议使用圆形Sprite
 
         // 添加主脚本
         TerminalHandlerView handler = triggerObj.AddComponent<TerminalHandlerView>();

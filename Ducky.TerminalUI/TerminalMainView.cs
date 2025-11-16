@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Concurrent;
+using Ducky.Sdk.Localizations;
 using Ducky.Sdk.Logging;
 using R3;
 using TMPro;
@@ -645,7 +646,7 @@ internal class TerminalMainView : MonoBehaviour
         titleTextRect.offsetMax = new Vector2(-60, 0); // 右边距（留空间给关闭按钮）
 
         TextMeshProUGUI titleText = titleTextObj.AddComponent<TextMeshProUGUI>();
-        titleText.text = "Terminal Console";
+        titleText.text = L.UI.TerminalTitle;
         titleText.fontSize = 18;
         titleText.fontStyle = FontStyles.Bold;
         titleText.color = Color.white;
@@ -701,13 +702,13 @@ internal class TerminalMainView : MonoBehaviour
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
         scrollRect.scrollSensitivity = 20f;
 
-        // Viewport (为滚动条留出空间，使用RectMask2D而非Mask)
+        // Viewport (不显示滚动条，使用整个宽度)
         GameObject viewportObj = new GameObject("Viewport");
         viewportObj.transform.SetParent(scrollViewObj.transform, false);
 
         RectTransform viewportRect = viewportObj.AddComponent<RectTransform>();
         viewportRect.anchorMin = Vector2.zero;
-        viewportRect.anchorMax = new Vector2(0.95f, 1); // 右侧留5%给滚动条
+        viewportRect.anchorMax = Vector2.one; // 使用整个宽度，不为滚动条留空间
         viewportRect.offsetMin = Vector2.zero;
         viewportRect.offsetMax = Vector2.zero;
 
@@ -741,50 +742,7 @@ internal class TerminalMainView : MonoBehaviour
 
         scrollRect.content = scrollContentRect;
 
-        // ===== 滚动条 =====
-        GameObject scrollbarObj = new GameObject("Scrollbar");
-        scrollbarObj.transform.SetParent(scrollViewObj.transform, false);
-
-        RectTransform scrollbarRect = scrollbarObj.AddComponent<RectTransform>();
-        scrollbarRect.anchorMin = new Vector2(0.96f, 0);
-        scrollbarRect.anchorMax = new Vector2(1, 1);
-        scrollbarRect.offsetMin = Vector2.zero;
-        scrollbarRect.offsetMax = Vector2.zero;
-
-        Image scrollbarImg = scrollbarObj.AddComponent<Image>();
-        scrollbarImg.color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-
-        Scrollbar scrollbarComp = scrollbarObj.AddComponent<Scrollbar>();
-        scrollbarComp.direction = Scrollbar.Direction.BottomToTop;
-
-        // 滑块区域
-        GameObject slidingAreaObj = new GameObject("Sliding Area");
-        slidingAreaObj.transform.SetParent(scrollbarObj.transform, false);
-
-        RectTransform slidingAreaRect = slidingAreaObj.AddComponent<RectTransform>();
-        slidingAreaRect.anchorMin = Vector2.zero;
-        slidingAreaRect.anchorMax = Vector2.one;
-        slidingAreaRect.offsetMin = new Vector2(2, 2);
-        slidingAreaRect.offsetMax = new Vector2(-2, -2);
-
-        // 滑块
-        GameObject handleObj = new GameObject("Handle");
-        handleObj.transform.SetParent(slidingAreaObj.transform, false);
-
-        RectTransform handleRect = handleObj.AddComponent<RectTransform>();
-        handleRect.anchorMin = Vector2.zero;
-        handleRect.anchorMax = Vector2.one;
-        handleRect.offsetMin = Vector2.zero;
-        handleRect.offsetMax = Vector2.zero;
-
-        Image handleImg = handleObj.AddComponent<Image>();
-        handleImg.color = new Color(0.5f, 0.5f, 0.5f, 0.9f);
-
-        scrollbarComp.handleRect = handleRect;
-        scrollbarComp.targetGraphic = handleImg;
-
-        scrollRect.verticalScrollbar = scrollbarComp;
-        scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
+        // 不创建滚动条，只使用鼠标滚轮或触摸手势进行滚动
 
         // ===== 3. 底部输入区域 =====
         GameObject inputAreaObj = new GameObject("InputArea");
@@ -893,7 +851,7 @@ internal class TerminalMainView : MonoBehaviour
         placeholderRect.offsetMax = Vector2.zero;
 
         TextMeshProUGUI placeholder = placeholderObj.AddComponent<TextMeshProUGUI>();
-        placeholder.text = "Enter command...";
+        placeholder.text = L.UI.InputPlaceholder;
         placeholder.fontSize = 14;
         placeholder.color = new Color(0.5f, 0.5f, 0.5f, 1f);
         placeholder.alignment = TextAlignmentOptions.MidlineLeft;
@@ -918,8 +876,8 @@ internal class TerminalMainView : MonoBehaviour
 
         inputField.textComponent = inputText;
 
-        // 创建过滤面板（挂在选择按钮上，使其左下角对齐按钮左上角）
-        ProviderFilterPanel filterPanel = ProviderFilterPanel.Create(providerBtnObj.transform, 240f);
+        // 创建过滤面板（挂在滚动视图上，使其左下角对齐滚动视图左下角，宽度与滚动视图一致）
+        ProviderFilterPanel filterPanel = ProviderFilterPanel.Create(scrollViewObj.transform);
         Log.Info("[TerminalMainView] ProviderFilterPanel created");
 
         // 添加主脚本到根对象

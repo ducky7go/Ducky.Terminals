@@ -87,7 +87,7 @@ internal class ProviderFilterPanel : MonoBehaviour
         if (textComp != null)
         {
             string displayText =
-                $"<size=16><color=#00FFFF>#{provider.ProviderId}</color></size> <size=12>{provider.DisplayName}</size>";
+                $"<size=18><color=#00FFFF>#{provider.ProviderId}</color></size> <size=14>{provider.DisplayName}</size>";
             textComp.text = displayText;
             textComp.richText = true;
             textComp.color = Color.white;
@@ -154,20 +154,21 @@ internal class ProviderFilterPanel : MonoBehaviour
     /// <summary>
     /// 创建过滤面板的工厂方法
     /// </summary>
-    public static ProviderFilterPanel Create(Transform parent, float width)
+    public static ProviderFilterPanel Create(Transform parent)
     {
         Log.Info("[ProviderFilterPanel] Creating provider filter panel...");
 
-        // 创建根对象（父容器是 ProviderSelector，与选择器弹窗使用相同的定位逻辑）
+        // 创建根对象（父容器是 ScrollView，面板左下角与 ScrollView 左下角对齐，但向上偏移以避开输入框）
         var rootObj = new GameObject("ProviderFilterPanel");
         rootObj.transform.SetParent(parent, false);
 
         var rootRect = rootObj.AddComponent<RectTransform>();
-        rootRect.anchorMin = new Vector2(0, 1); // 锚点在左上角（与 ProviderSelector 弹窗一致）
-        rootRect.anchorMax = new Vector2(0, 1); // 锚点在左上角
-        rootRect.pivot = new Vector2(0, 0); // 轴心在左下角（使面板左下角对齐选择器左上角）
-        rootRect.anchoredPosition = new Vector2(0, 0); // 左下角与选择器左上角对齐（无偏移）
-        rootRect.sizeDelta = new Vector2(width, 0);
+        rootRect.anchorMin = new Vector2(0, 0); // 锚点在左下角
+        rootRect.anchorMax = new Vector2(1, 0); // 锚点右边延伸到父容器右侧，使宽度与父容器一致
+        rootRect.pivot = new Vector2(0, 0); // 轴心在左下角
+        // 向上偏移：输入区域高度(70) + 输入区域与滚动区域之间的间距(10)
+        rootRect.anchoredPosition = new Vector2(0, 100); // 左下角向上偏移100px，显示在输入框上方
+        rootRect.sizeDelta = new Vector2(0, 0); // 宽度和高度由锚点控制
 
         // ===== 面板容器 =====
         var panelObj = new GameObject("Panel");
@@ -176,10 +177,10 @@ internal class ProviderFilterPanel : MonoBehaviour
 
         var panelRect = panelObj.AddComponent<RectTransform>();
         panelRect.anchorMin = new Vector2(0, 0);
-        panelRect.anchorMax = new Vector2(0, 0);
+        panelRect.anchorMax = new Vector2(1, 0);
         panelRect.pivot = new Vector2(0, 0);
         panelRect.anchoredPosition = new Vector2(0, 0);
-        panelRect.sizeDelta = new Vector2(width, 0);
+        panelRect.sizeDelta = new Vector2(0, 0); // 宽度由锚点控制，高度由 ContentSizeFitter 自动计算
 
         var panelImage = panelObj.AddComponent<Image>();
         panelImage.color = new Color(0.15f, 0.15f, 0.15f, 0.98f);
@@ -204,8 +205,8 @@ internal class ProviderFilterPanel : MonoBehaviour
         contentLayout.childControlHeight = true;
         contentLayout.childForceExpandWidth = true;
         contentLayout.childForceExpandHeight = false;
-        contentLayout.spacing = 2;
-        contentLayout.padding = new RectOffset(0, 0, 0, 0);
+        contentLayout.spacing = 4; // 增加列表项间距，从2到4
+        contentLayout.padding = new RectOffset(8, 8, 8, 8); // 增加内边距，让显示更美观
 
         var contentFitter = contentObj.AddComponent<ContentSizeFitter>();
         contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -216,10 +217,10 @@ internal class ProviderFilterPanel : MonoBehaviour
         itemTemplateObj.SetActive(false);
 
         var itemTemplateRect = itemTemplateObj.AddComponent<RectTransform>();
-        itemTemplateRect.sizeDelta = new Vector2(0, 35);
+        itemTemplateRect.sizeDelta = new Vector2(0, 50); // 增加高度从35到50，让用户更容易选中
 
         var itemLayoutElement = itemTemplateObj.AddComponent<LayoutElement>();
-        itemLayoutElement.preferredHeight = 35;
+        itemLayoutElement.preferredHeight = 50; // 增加高度从35到50
 
         var itemImage = itemTemplateObj.AddComponent<Image>();
         itemImage.color = new Color(0.25f, 0.25f, 0.25f, 1f);
@@ -245,7 +246,7 @@ internal class ProviderFilterPanel : MonoBehaviour
 
         var itemText = itemTextObj.AddComponent<TextMeshProUGUI>();
         itemText.text = "Item Text";
-        itemText.fontSize = 14;
+        itemText.fontSize = 16; // 增加字体大小，从14到16
         itemText.color = Color.white;
         itemText.alignment = TextAlignmentOptions.Left;
         itemText.verticalAlignment = VerticalAlignmentOptions.Middle;

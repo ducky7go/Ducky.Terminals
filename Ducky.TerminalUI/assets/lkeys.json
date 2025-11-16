@@ -1,0 +1,22 @@
+
+{
+  "namespace": "Ducky.TerminalUI",
+  "hash": "8b40132cd75ecc0ce6dff74873e80ffd008d7101884e3591a825128ce3d9ca82",
+  "keyCount": 2,
+  "supportedLanguages": [
+    "en",
+    "zh-hant",
+    "zh",
+    "fr",
+    "de",
+    "es",
+    "ru",
+    "ja",
+    "ko",
+    "pt"
+  ],
+  "keys": [
+    "terminal_input_placeholder",
+    "terminal_title"
+  ]
+}

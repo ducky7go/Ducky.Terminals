@@ -234,23 +234,36 @@ internal class TerminalViewModel : IDisposable
 
         Log.Info($"[TerminalViewModel] Sending message: {message}");
 
+        // '#' 模式处理：如果输入以 # 开头且有多个过滤选项，自动选中第一个
+        if (message.StartsWith("#"))
+        {
+            // 检查是否有过滤结果
+            if (FilteredProviders.Value.Count > 0)
+            {
+                Log.Info($"[TerminalViewModel] Auto-selecting first provider from {FilteredProviders.Value.Count} filtered options");
+                SelectFilteredProvider(0);
+                return; // 选择完成后直接返回，不继续发送消息
+            }
+            else
+            {
+                Log.Warn("[TerminalViewModel] No filtered providers available, ignoring send");
+                return; // 没有匹配的 provider，直接返回
+            }
+        }
+
         // 解析消息，提取 providerId 和实际消息内容
         string? targetModId = null;
         var actualMessage = message;
 
-        // '#' 模式仅用于选择，不发送
-        if (!message.StartsWith("#"))
-        {
-            // 使用当前选中的 provider
-            var selectedProvider =
-                CommandProviders.Value.Count > 0 && SelectedProviderIndex.Value < CommandProviders.Value.Count
-                    ? CommandProviders.Value[SelectedProviderIndex.Value]
-                    : null;
+        // 使用当前选中的 provider
+        var selectedProvider =
+            CommandProviders.Value.Count > 0 && SelectedProviderIndex.Value < CommandProviders.Value.Count
+                ? CommandProviders.Value[SelectedProviderIndex.Value]
+                : null;
 
-            if (selectedProvider != null)
-            {
-                targetModId = selectedProvider.ModId;
-            }
+        if (selectedProvider != null)
+        {
+            targetModId = selectedProvider.ModId;
         }
 
         // 创建显示消息
