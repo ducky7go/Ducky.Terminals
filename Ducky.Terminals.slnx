@@ -3,6 +3,7 @@
     <File Path="Directory.Build.props" />
     <File Path="nuget.config" />
   </Folder>
+  <Project Path="Ducky.DemoTerminalClientWithoutSdk/Ducky.DemoTerminalClientWithoutSdk.csproj" />
   <Project Path="Ducky.DemoTerminalClient\Ducky.DemoTerminalClient.csproj" />
   <Project Path="Ducky.TerminalUI\Ducky.TerminalUI.csproj" />
 </Solution>
