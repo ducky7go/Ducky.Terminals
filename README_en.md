@@ -22,7 +22,97 @@ English | [简体中文](./README.md)
 | **Ducky.DemoTerminalClient** | Example client using Ducky.Sdk (recommended) | [3606789816](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789816) |
 | **Ducky.DemoTerminalClientWithoutSdk** | Manual integration example without SDK | [3606789962](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789962) |
 
-## 🚀 Quick Start
+## � Why Integrate with the Terminal Console?
+
+As a mod developer, integrating with the terminal console brings numerous benefits to your mod and players:
+
+### 1️⃣ Quick Configuration Without UI Design
+
+Allow players to configure your mod through simple text commands, eliminating the need to spend significant time designing complex configuration UIs.
+
+**Examples:**
+```bash
+# Set auto-start behavior
+set autostart false
+
+# Configure refresh interval
+config refresh-interval 5000
+
+# Enable debug mode
+debug enable
+```
+
+### 2️⃣ Reserved Entry Points for Complex Operations
+
+Provide command-line interfaces for advanced features or diagnostic tools, making it easy for players to execute complex operations with a single command.
+
+**Examples:**
+```bash
+# Export diagnostic data
+dump --output ~/duckov/logs/debug.zip
+
+# Collect environment info (config, logs, data) for bug reports
+collect-env --include-logs --include-config
+
+# Batch cleanup cache
+cleanup --cache --temp --logs
+```
+
+### 3️⃣ Expose APIs for Other Mods to Call
+
+**This is the most powerful feature!** Terminal commands can be sent not only by players through the terminal, but **also by other mods to your mod**. This enables cross-mod collaboration and creates a powerful ecosystem.
+
+#### Real-World Use Cases:
+
+**🔔 Case 1: Unified Notification Center**
+```bash
+# Any mod can send notifications to the notification center
+notify append --title "Quest Complete" --message "Congratulations on completing the main quest!" --type success
+
+# Example from another mod
+await client.SendTo("local.NotificationCenter", "cli", "notify append --title 'HP Low' --type warning");
+```
+
+**🎨 Case 2: Shared Beautiful Dialog Component**
+```bash
+# Create a beautiful dialog mod that other mods can use without referencing DLLs
+dialog show --title "Confirm Action" --message "Are you sure you want to delete this save?" --buttons "OK,Cancel"
+
+# Called by other mods
+await client.SendTo("local.BeautifulDialog", "cli", "dialog show --title 'Notice' --message 'Operation successful'");
+```
+
+**📖 Case 3: Save Life Story (Timeline System)**
+```bash
+# Create a "Save Chronicles" mod to record player's game journey
+timeline add --event "Boss Defeated: Duck King" --timestamp 1234567890
+timeline add --event "First Clear: Hard Mode" --timestamp 1234567900
+
+# Other mods write to the timeline
+await client.SendTo("local.SaveLifeline", "cli", "timeline add --event 'Achievement Unlocked: Immortal' --category achievement");
+await client.SendTo("local.SaveLifeline", "cli", "timeline add --event 'Total Kills: 1000' --category stats");
+```
+
+**📊 Case 4: Statistics Data Hub**
+```bash
+# Create a data statistics mod to aggregate data from all mods
+stats report --mod-id local.CombatMod --kills 150 --deaths 3
+stats report --mod-id local.EconomyMod --gold-earned 5000
+
+# Query statistics
+stats query --period today
+stats export --format json
+```
+
+### 🔗 Advantages of Inter-Mod Communication
+
+- **Zero Dependency Coupling**: Mods don't need to directly reference each other's DLLs
+- **Dynamic Discovery**: Runtime discovery of available mod services
+- **Version Compatibility**: Text-based protocol is naturally backward compatible
+- **Easy Debugging**: Both players and developers can test commands directly through the terminal
+- **Standardized Interface**: Using `System.CommandLine` provides clear parameters and help documentation
+
+## �🚀 Quick Start
 
 ### Requirements
 
