@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\Local.props" Condition="Exists('../Local.props')" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
+    <ModName>Ducky.DemoTerminalClientWithoutSdk</ModName>
+    <DuckovFolder Condition=" '$(DuckovFolder)' == '' AND '$(SteamFolder)' != '' ">$(SteamFolder)steamapps/common/Escape from Duckov/</DuckovFolder>
+    <ManagedDirectory>$(DuckovFolder)Duckov_Data/Managed/</ManagedDirectory>
+    <ModsDirectory>$(DuckovFolder)Duckov_Data/Mods/</ModsDirectory>
+    <ModFolder>$(ModsDirectory)$(ModName)/</ModFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="$(ManagedDirectory)TeamSoda*.dll" />
+    <Reference Include="$(ManagedDirectory)ItemStatsSystem.dll" />
+    <Reference Include="$(ManagedDirectory)Newtonsoft.Json.dll" />
+    <Reference Include="$(ManagedDirectory)UniTask.dll" />
+    <Reference Include="$(ManagedDirectory)Unity*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets/*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- copy all assets and target dll to modFolder  -->
+  <Target Name="CopyToModFolder" AfterTargets="Build">
+    <!-- files from assets folder -->
+    <ItemGroup>
+      <_AssetsToCopy Include="$(OutputPath)assets/**" />
+    </ItemGroup>
+    <MakeDir Directories="$(ModFolder)" Condition="!Exists('$(ModFolder)')" />
+    <Copy SourceFiles="@(_AssetsToCopy)" DestinationFiles="@(_AssetsToCopy->'$(ModFolder)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <!-- target dll -->
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModFolder)" />
+  </Target>
+</Project>
