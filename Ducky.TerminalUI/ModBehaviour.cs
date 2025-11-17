@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using Ducky.Sdk.ModBehaviours;
+﻿using Ducky.Sdk.ModBehaviours;
 using UnityEngine;
 
 namespace Ducky.TerminalUI;

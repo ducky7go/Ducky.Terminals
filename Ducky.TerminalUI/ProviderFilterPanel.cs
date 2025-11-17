@@ -1,4 +1,3 @@
-using Ducky.Sdk.Logging;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

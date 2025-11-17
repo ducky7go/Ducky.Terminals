@@ -1,0 +1,40 @@
+
+{
+  "namespace": "Newbe.ModArk",
+  "hash": "1cbee264919b12a554ddf5ec05d6991f3458fe0be987248244d7e12304c1bd60",
+  "keyCount": 20,
+  "supportedLanguages": [
+    "en",
+    "zh-hant",
+    "zh",
+    "fr",
+    "de",
+    "es",
+    "ru",
+    "ja",
+    "ko",
+    "pt"
+  ],
+  "keys": [
+    "ma_terminal_backup_cmd_desc",
+    "ma_terminal_backup_cmd_name_arg_desc",
+    "ma_terminal_backup_completed_log",
+    "ma_terminal_backup_failed_log",
+    "ma_terminal_backup_name_required_error",
+    "ma_terminal_desc",
+    "ma_terminal_restore_cmd_desc",
+    "ma_terminal_restore_completed_log",
+    "ma_terminal_restore_failed_log",
+    "ma_terminal_restore_folder_countdown_log",
+    "ma_terminal_restore_invalid_file_error",
+    "ma_terminal_restore_missing_fields_error",
+    "ma_terminal_restore_need_yes_error",
+    "ma_terminal_restore_read_file_error",
+    "ma_terminal_restore_shutdown_warning_log",
+    "ma_terminal_restore_steam_not_initialized_error",
+    "ma_terminal_restore_subscribe_success_log",
+    "ma_terminal_restore_timeout_error",
+    "ma_terminal_restore_unsubscribe_success_log",
+    "ma_terminal_restore_yes_opt_desc"
+  ]
+}
