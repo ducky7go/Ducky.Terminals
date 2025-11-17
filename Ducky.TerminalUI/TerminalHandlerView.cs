@@ -1,5 +1,4 @@
 using System.Collections;
-using Ducky.Sdk.Logging;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

@@ -140,6 +140,14 @@ ProviderIds are short identifiers for mod selection (e.g., `#816` for steam mod,
 
 Users filter with `#` prefix: typing `#816` filters to matching providers.
 
+### ModArk Backup/Restore Flow
+`Ducky.ModArk` (in `Ducky.ModArk/`) extends the terminal ecosystem with a stateful backup tool:
+
+- **Command surface**: `TerminalEntry.cs` registers `backup <name>` and `restore [--yes|-y]` via `System.CommandLine`. Each action is wrapped in `ModAsynchronousCommandLineAction`, so return strings are automatically routed back to the terminal.
+- **Snapshot creation**: `ModArkBackupService.BackupAsync()` gathers Steam Workshop subscriptions (`SteamUGC`), local ordering/enabled flags from `ModStateRepository.GetCurrentStatesAsync()`, and serializes a `BackupSnapshot` model (`BackupModels.cs`) to `<Temp>/DuckyModArk/backup_*.json`. The service publishes progress lines through `OnBackupMessage`, and `ModBehaviour` wires those events to `Contract.ModTerminalClient.ShowToTerminal()`.
+- **Restore safeguards**: `RestoreAsync()` waits for the player to drop a JSON file into a temp folder opened via `Application.OpenURL`. Without `--yes`, it only prints a diff plan (`PublishRestorePlan`) so players can review required subscribe/unsubscribe operations. When confirmed, it synchronizes subscriptions (retrying Steam API calls), reapplies ordering/enabled state through `ModStateRepository.ApplyStatesAsync(overwrite: true)`, then warns that the game will close shortly.
+- **Localization**: All user-facing strings come from `L.Terminal.*`, backed by keys in `Ducky.ModArk/LK.cs` and CSV values under `Ducky.ModArk/assets/Locales/`. When adding new prompts or error messages, update the keys first so auto-generated translations stay aligned.
+
 ## Integration Points
 
 ### Adding a New Terminal Client Mod

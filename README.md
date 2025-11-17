@@ -21,6 +21,31 @@
 | **Ducky.TerminalUI** | 终端 UI 主程序，负责显示界面和路由命令 | [3606793704](https://steamcommunity.com/sharedfiles/filedetails/?id=3606793704) |
 | **Ducky.DemoTerminalClient** | 使用 Ducky.Sdk 的示例客户端（推荐方式） | [3606789816](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789816) |
 | **Ducky.DemoTerminalClientWithoutSdk** | 不使用 SDK 的手动集成示例 | [3606789962](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789962) |
+| **Ducky.ModArk** | “模组方舟”——备份/还原 Steam 订阅、排序与启用状态的终端工具 | [3607456411](https://steamcommunity.com/sharedfiles/filedetails/?id=3607456411) |
+
+## 🛟 Ducky.ModArk 快速了解
+
+`Ducky.ModArk` 是内置在本仓库中的“模组配置守护者”。它通过终端命令对接 `ModArkBackupService`（`Ducky.ModArk/ModArkBackupService.cs`）与 `ModStateRepository`，可以：
+
+- 读取当前 Steam 订阅 (`SteamUGC`) 与游戏内 `ModManager.modInfos`，并生成 `backup.json` 快照（结构见 `BackupModels.cs`）
+- 监听 `backup`/`restore` 命令（`TerminalEntry.cs` 使用 `System.CommandLine`），并把重要日志实时转发到终端
+- 在还原时计算需要订阅/退订的差异、重新应用排序与启用状态，并在 `--yes` 未提供时只输出计划而不执行
+- 通过 `Application.OpenURL` 引导玩家打开备份或还原目录，方便拖拽 JSON 文件
+
+### 运行前准备
+- 启用 `Ducky.TerminalUI`（用于打开终端界面）以及 `Ducky.ModArk`
+- 确认 Steam 处于初始化状态；否则备份/还原会直接返回错误提示
+
+### 常用终端命令
+```bash
+# 创建一次快照，名称会被自动清洗以构造成合法文件夹
+modark backup pre_patch_test
+
+# 按提示把 backup.json 放入临时目录后执行还原
+modark restore --yes
+```
+
+终端中也可以输入 `help` 或 `backup --help` 查看自动生成的说明。所有命令都会使用 `L.Terminal.*` 的多语言字符串（定义在 `Ducky.ModArk/LK.cs`，译文位于 `assets/Locales/*.csv`）对不同语言玩家保持一致体验。
 
 ## � 为什么要对接终端控制台？
 

@@ -3,9 +3,7 @@
   <Import Project="..\Local.props" Condition="Exists('../Local.props')" />
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-    <ImplicitUsings>true</ImplicitUsings>
+
     <ModName>Ducky.DemoTerminalClientWithoutSdk</ModName>
     <DuckovFolder Condition=" '$(DuckovFolder)' == '' AND '$(SteamFolder)' != '' ">$(SteamFolder)steamapps/common/Escape from Duckov/</DuckovFolder>
     <ManagedDirectory>$(DuckovFolder)Duckov_Data/Managed/</ManagedDirectory>

@@ -1,9 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using Cysharp.Threading.Tasks;
-using Ducky.Sdk.Contracts;
 using Ducky.Sdk.Contracts.CommandLine;
-using Ducky.Sdk.Logging;
 
 namespace Ducky.DemoTerminalClient;
 

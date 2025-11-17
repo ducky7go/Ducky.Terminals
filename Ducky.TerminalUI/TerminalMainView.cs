@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Concurrent;
-using Ducky.Sdk.Localizations;
-using Ducky.Sdk.Logging;
 using R3;
 using TMPro;
 using UnityEngine;
