@@ -522,7 +522,7 @@ internal class TerminalViewModel : IDisposable
     private string PreprocessProviderId(string input)
     {
         var result = new System.Text.StringBuilder();
-        foreach (char c in input)
+        foreach (var c in input)
         {
             if (char.IsLetterOrDigit(c))
             {

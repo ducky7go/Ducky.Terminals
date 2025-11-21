@@ -53,7 +53,7 @@ internal class ProviderFilterPanel : MonoBehaviour
         }
 
         // 为每个 provider 创建一个列表项
-        for (int i = 0; i < providers.Count; i++)
+        for (var i = 0; i < providers.Count; i++)
         {
             var provider = providers[i];
             var itemObj = CreateProviderItem(provider, i);
@@ -85,7 +85,7 @@ internal class ProviderFilterPanel : MonoBehaviour
         var textComp = itemObj.GetComponentInChildren<TextMeshProUGUI>();
         if (textComp != null)
         {
-            string displayText =
+            var displayText =
                 $"<size=18><color=#00FFFF>#{provider.ProviderId}</color></size> <size=14>{provider.DisplayName}</size>";
             textComp.text = displayText;
             textComp.richText = true;
@@ -101,7 +101,7 @@ internal class ProviderFilterPanel : MonoBehaviour
         var button = itemObj.GetComponent<Button>();
         if (button != null)
         {
-            int capturedIndex = index;
+            var capturedIndex = index;
             button.onClick.AddListener(() => OnItemClicked(capturedIndex));
         }
 
