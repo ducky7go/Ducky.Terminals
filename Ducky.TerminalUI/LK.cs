@@ -2,7 +2,7 @@ using Ducky.Sdk.Attributes;
 
 namespace Ducky.TerminalUI;
 
-[LanguageSupport("en", "zh-Hant", "zh", "fr", "de", "es", "ru", "ja", "ko", "pt")]
+[LanguageSupport("en", "zh-hant", "zh", "fr", "de", "es", "ru", "ja", "ko", "pt")]
 public static class LK
 {
     public static class UI

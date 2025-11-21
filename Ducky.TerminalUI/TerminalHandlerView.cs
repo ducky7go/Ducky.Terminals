@@ -1,14 +1,13 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Ducky.TerminalUI;
 
 /// <summary>
-/// 左下角触发区域，鼠标悬停时从底部滑出小圆圈按钮
+/// 左下角触发区域，鼠标悬停时从底部滑出1/4圆圈按钮
 /// </summary>
-public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class TerminalHandlerView : MonoBehaviour
 {
     [Header("触发区域设置")] [SerializeField] private RectTransform? triggerArea;
 
@@ -18,7 +17,7 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
 
     [Header("动画设置")] [SerializeField] private float slideSpeed = 5f;
     [SerializeField] private float hiddenYPosition = -100f; // 隐藏位置（屏幕外）
-    [SerializeField] private float visibleYPosition = 50f; // 可见位置
+    [SerializeField] private float visibleYPosition = 0f; // 可见位置（左下角完全可见）
 
     private bool isMouseOver = false;
     private TerminalMainView? _mainView;
@@ -59,27 +58,42 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
         _mainView = mainView;
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    private void Update()
     {
-        // 如果主面板已经展示，不响应触发区域
-        if (_mainView != null && _mainView.IsVisible)
+        // 检查鼠标是否在触发区域内
+        if (triggerArea != null && RectTransformUtility.RectangleContainsScreenPoint(triggerArea, Input.mousePosition, null))
         {
-            Log.Info("[TerminalHandlerView] Main panel is visible, ignoring trigger");
-            return;
+            // 如果主面板已经展示，不响应触发区域
+            if (_mainView != null && _mainView.IsVisible)
+            {
+                if (isMouseOver)
+                {
+                    Log.Info("[TerminalHandlerView] Main panel is visible, hiding trigger");
+                    isMouseOver = false;
+                    StopAllCoroutines();
+                    StartCoroutine(SlideCircle(hiddenYPosition));
+                }
+                return;
+            }
+
+            if (!isMouseOver)
+            {
+                Log.Info("[TerminalHandlerView] Mouse entered trigger area");
+                isMouseOver = true;
+                StopAllCoroutines();
+                StartCoroutine(SlideCircle(visibleYPosition));
+            }
         }
-
-        Log.Info("[TerminalHandlerView] Mouse entered trigger area");
-        isMouseOver = true;
-        StopAllCoroutines();
-        StartCoroutine(SlideCircle(visibleYPosition));
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        Log.Info("[TerminalHandlerView] Mouse exited trigger area");
-        isMouseOver = false;
-        StopAllCoroutines();
-        StartCoroutine(SlideCircle(hiddenYPosition));
+        else
+        {
+            if (isMouseOver)
+            {
+                Log.Info("[TerminalHandlerView] Mouse exited trigger area");
+                isMouseOver = false;
+                StopAllCoroutines();
+                StartCoroutine(SlideCircle(hiddenYPosition));
+            }
+        }
     }
 
     /// <summary>
@@ -136,32 +150,32 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
     }
 
     /// <summary>
-    /// 创建圆形 Sprite
+    /// 创建1/4圆形 Sprite（左下角）
     /// </summary>
-    private static Sprite CreateCircleSprite(int resolution)
+    private static Sprite CreateQuarterCircleSprite(int resolution)
     {
-        int center = resolution / 2;
-        float radius = center - 1;
-        
-        Texture2D texture = new Texture2D(resolution, resolution);
-        Color[] pixels = new Color[resolution * resolution];
-        
-        for (int y = 0; y < resolution; y++)
+        var center = 0; // 圆心在左下角
+        float radius = resolution - 1;
+
+        var texture = new Texture2D(resolution, resolution);
+        var pixels = new Color[resolution * resolution];
+
+        for (var y = 0; y < resolution; y++)
         {
-            for (int x = 0; x < resolution; x++)
+            for (var x = 0; x < resolution; x++)
             {
                 float dx = x - center;
                 float dy = y - center;
-                float distance = Mathf.Sqrt(dx * dx + dy * dy);
-                
-                // 抗锯齿：边缘1像素做渐变
-                if (distance <= radius - 1)
+                var distance = Mathf.Sqrt(dx * dx + dy * dy);
+
+                // 只保留右上象限的圆弧（从左下角开始的1/4圆）
+                if (distance <= radius - 1 && x >= center && y >= center)
                 {
                     pixels[y * resolution + x] = Color.white;
                 }
-                else if (distance <= radius)
+                else if (distance <= radius && x >= center && y >= center)
                 {
-                    float alpha = radius - distance;
+                    var alpha = radius - distance;
                     pixels[y * resolution + x] = new Color(1, 1, 1, alpha);
                 }
                 else
@@ -170,11 +184,12 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
                 }
             }
         }
-        
+
         texture.SetPixels(pixels);
         texture.Apply();
-        
-        return Sprite.Create(texture, new Rect(0, 0, resolution, resolution), new Vector2(0.5f, 0.5f));
+
+        // 将pivot设置在左下角，这样1/4圆会正确显示在左下角
+        return Sprite.Create(texture, new Rect(0, 0, resolution, resolution), new Vector2(0, 0));
     }
 
     /// <summary>
@@ -185,50 +200,50 @@ public class TerminalHandlerView : MonoBehaviour, IPointerEnterHandler, IPointer
         Log.Info("[TerminalHandlerView] Creating UI structure...");
 
         // 创建触发区域容器
-        GameObject triggerObj = new GameObject("TerminalTriggerArea");
+        var triggerObj = new GameObject("TerminalTriggerArea");
         triggerObj.transform.SetParent(canvas.transform, false);
 
-        RectTransform triggerRect = triggerObj.AddComponent<RectTransform>();
+        var triggerRect = triggerObj.AddComponent<RectTransform>();
         triggerRect.anchorMin = new Vector2(0, 0); // 左下角
         triggerRect.anchorMax = new Vector2(0, 0);
         triggerRect.pivot = new Vector2(0, 0);
         triggerRect.anchoredPosition = Vector2.zero;
         triggerRect.sizeDelta = new Vector2(150, 150); // 触发区域大小
 
-        // 添加Image组件使其可以接收鼠标事件（但完全透明）
-        Image triggerImage = triggerObj.AddComponent<Image>();
+        // 添加Image组件（仅用于显示，不接收射线）
+        var triggerImage = triggerObj.AddComponent<Image>();
         triggerImage.color = new Color(0, 0, 0, 0); // 完全透明
-        triggerImage.raycastTarget = true; // 确保可以接收射线检测
+        triggerImage.raycastTarget = false; // 不接收射线，允许点击穿透
 
         Log.Info("[TerminalHandlerView] Trigger area created");
 
-        // 创建圆圈按钮
-        GameObject circleObj = new GameObject("CircleButton");
+        // 创建1/4圆圈按钮
+        var circleObj = new GameObject("QuarterCircleButton");
         circleObj.transform.SetParent(triggerObj.transform, false);
 
-        RectTransform circleRect = circleObj.AddComponent<RectTransform>();
-        circleRect.anchorMin = new Vector2(0.5f, 0);
-        circleRect.anchorMax = new Vector2(0.5f, 0);
-        circleRect.pivot = new Vector2(0.5f, 0.5f);
-        circleRect.anchoredPosition = new Vector2(0, -100); // 初始隐藏
-        circleRect.sizeDelta = new Vector2(60, 60); // 圆圈大小
+        var circleRect = circleObj.AddComponent<RectTransform>();
+        circleRect.anchorMin = new Vector2(0, 0); // 左下角锚点
+        circleRect.anchorMax = new Vector2(0, 0);
+        circleRect.pivot = new Vector2(0, 0); // Pivot也设置在左下角
+        circleRect.anchoredPosition = new Vector2(0, -100); // 初始隐藏位置
+        circleRect.sizeDelta = new Vector2(60, 60); // 1/4圆圈大小
 
         // 添加按钮组件
-        Image circleImage = circleObj.AddComponent<Image>();
+        var circleImage = circleObj.AddComponent<Image>();
         circleImage.color = new Color(0.2f, 0.6f, 1f, 0.8f); // 蓝色半透明
         circleImage.raycastTarget = true; // 确保按钮可以接收点击
-        
-        // 创建圆形 Sprite
-        circleImage.sprite = CreateCircleSprite(60);
+
+        // 创建1/4圆形 Sprite
+        circleImage.sprite = CreateQuarterCircleSprite(60);
         circleImage.type = Image.Type.Simple;
         circleImage.preserveAspect = true;
 
-        Button button = circleObj.AddComponent<Button>();
+        var button = circleObj.AddComponent<Button>();
 
         Log.Info("[TerminalHandlerView] Circle button created");
 
         // 添加主脚本
-        TerminalHandlerView handler = triggerObj.AddComponent<TerminalHandlerView>();
+        var handler = triggerObj.AddComponent<TerminalHandlerView>();
         handler.triggerArea = triggerRect;
         handler.circleButton = circleObj;
         handler.circleButtonRect = circleRect;

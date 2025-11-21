@@ -137,10 +137,10 @@ internal class TerminalMainView : MonoBehaviour
     /// </summary>
     private void ProcessPendingMessages()
     {
-        int processedCount = 0;
+        var processedCount = 0;
         const int maxBatchSize = 50; // 每次最多处理50条消息，避免阻塞主线程
 
-        while (processedCount < maxBatchSize && _incomingMessages.TryDequeue(out TerminalMessage message))
+        while (processedCount < maxBatchSize && _incomingMessages.TryDequeue(out var message))
         {
             try
             {
@@ -312,13 +312,13 @@ internal class TerminalMainView : MonoBehaviour
         if (scrollContent == null) return;
 
         // 创建消息文本对象
-        GameObject messageObj = new GameObject($"Message_{message.Timestamp:HHmmss}");
+        var messageObj = new GameObject($"Message_{message.Timestamp:HHmmss}");
         messageObj.transform.SetParent(scrollContent, false);
 
         // 确保有 RectTransform（AddComponent<TextMeshProUGUI> 会自动添加 CanvasRenderer）
         var _ = messageObj.AddComponent<RectTransform>();
 
-        TextMeshProUGUI messageText = messageObj.AddComponent<TextMeshProUGUI>();
+        var messageText = messageObj.AddComponent<TextMeshProUGUI>();
         // 使用原始文本而非 FormattedText，以便更好地控制格式
         messageText.text = message.FormattedText;
         messageText.fontSize = 16;
@@ -332,11 +332,9 @@ internal class TerminalMainView : MonoBehaviour
 
         // 计算文本所需的首选高度并告知布局系统
         messageText.ForceMeshUpdate();
-        float preferredHeight = Mathf.Max(22f, messageText.preferredHeight + 4f); // 添加一些额外间距
 
         // 添加 LayoutElement 用于明确高度，避免为 0 导致不可见
-        LayoutElement layoutElement = messageObj.AddComponent<LayoutElement>();
-        layoutElement.preferredHeight = preferredHeight;
+        var layoutElement = messageObj.AddComponent<LayoutElement>();
         layoutElement.flexibleHeight = 0f;
     }
 
@@ -593,10 +591,10 @@ internal class TerminalMainView : MonoBehaviour
         Log.Info("[TerminalMainView] Creating main panel...");
 
         // 创建主面板容器（根对象）
-        GameObject rootObj = new GameObject("TerminalMainPanel");
+        var rootObj = new GameObject("TerminalMainPanel");
         rootObj.transform.SetParent(canvas.transform, false);
 
-        RectTransform rootRect = rootObj.AddComponent<RectTransform>();
+        var rootRect = rootObj.AddComponent<RectTransform>();
         rootRect.anchorMin = new Vector2(0, 0); // 左下角锚点
         rootRect.anchorMax = new Vector2(0.5f, 1); // 右上角锚点到屏幕中间
         rootRect.pivot = new Vector2(0, 0.5f);
@@ -606,44 +604,44 @@ internal class TerminalMainView : MonoBehaviour
         rootRect.anchoredPosition = new Vector2(-Screen.width / 2, 0);
 
         // 创建内容面板（实际显示/隐藏的对象）
-        GameObject contentObj = new GameObject("Content");
+        var contentObj = new GameObject("Content");
         contentObj.transform.SetParent(rootObj.transform, false);
 
-        RectTransform contentRect = contentObj.AddComponent<RectTransform>();
+        var contentRect = contentObj.AddComponent<RectTransform>();
         contentRect.anchorMin = Vector2.zero;
         contentRect.anchorMax = Vector2.one;
         contentRect.offsetMin = Vector2.zero;
         contentRect.offsetMax = Vector2.zero;
 
         // 添加背景到内容面板
-        Image contentImage = contentObj.AddComponent<Image>();
+        var contentImage = contentObj.AddComponent<Image>();
         contentImage.color = new Color(0.1f, 0.1f, 0.1f, 0.95f); // 深灰色半透明背景
 
         // ===== 1. 标题栏 =====
-        GameObject titleBarObj = new GameObject("TitleBar");
+        var titleBarObj = new GameObject("TitleBar");
         titleBarObj.transform.SetParent(contentObj.transform, false);
 
-        RectTransform titleBarRect = titleBarObj.AddComponent<RectTransform>();
+        var titleBarRect = titleBarObj.AddComponent<RectTransform>();
         titleBarRect.anchorMin = new Vector2(0, 1); // 顶部
         titleBarRect.anchorMax = new Vector2(1, 1);
         titleBarRect.pivot = new Vector2(0.5f, 1);
         titleBarRect.anchoredPosition = Vector2.zero;
         titleBarRect.sizeDelta = new Vector2(0, 50); // 高度50
 
-        Image titleBarImage = titleBarObj.AddComponent<Image>();
+        var titleBarImage = titleBarObj.AddComponent<Image>();
         titleBarImage.color = new Color(0.15f, 0.15f, 0.15f, 1f); // 稍亮一点的背景
 
         // 标题文本
-        GameObject titleTextObj = new GameObject("TitleText");
+        var titleTextObj = new GameObject("TitleText");
         titleTextObj.transform.SetParent(titleBarObj.transform, false);
 
-        RectTransform titleTextRect = titleTextObj.AddComponent<RectTransform>();
+        var titleTextRect = titleTextObj.AddComponent<RectTransform>();
         titleTextRect.anchorMin = new Vector2(0, 0);
         titleTextRect.anchorMax = new Vector2(1, 1);
         titleTextRect.offsetMin = new Vector2(15, 0); // 左边距
         titleTextRect.offsetMax = new Vector2(-60, 0); // 右边距（留空间给关闭按钮）
 
-        TextMeshProUGUI titleText = titleTextObj.AddComponent<TextMeshProUGUI>();
+        var titleText = titleTextObj.AddComponent<TextMeshProUGUI>();
         titleText.text = L.UI.TerminalTitle;
         titleText.fontSize = 18;
         titleText.fontStyle = FontStyles.Bold;
@@ -651,32 +649,32 @@ internal class TerminalMainView : MonoBehaviour
         titleText.alignment = TextAlignmentOptions.MidlineLeft;
 
         // 关闭按钮（在标题栏上）
-        GameObject closeButtonObj = new GameObject("CloseButton");
+        var closeButtonObj = new GameObject("CloseButton");
         closeButtonObj.transform.SetParent(titleBarObj.transform, false);
 
-        RectTransform closeRect = closeButtonObj.AddComponent<RectTransform>();
+        var closeRect = closeButtonObj.AddComponent<RectTransform>();
         closeRect.anchorMin = new Vector2(1, 0.5f); // 右侧中间
         closeRect.anchorMax = new Vector2(1, 0.5f);
         closeRect.pivot = new Vector2(1, 0.5f);
         closeRect.anchoredPosition = new Vector2(-10, 0);
         closeRect.sizeDelta = new Vector2(35, 35);
 
-        Image closeImage = closeButtonObj.AddComponent<Image>();
+        var closeImage = closeButtonObj.AddComponent<Image>();
         closeImage.color = new Color(0.8f, 0.2f, 0.2f, 1f); // 红色按钮
 
-        Button closeButton = closeButtonObj.AddComponent<Button>();
+        var closeButton = closeButtonObj.AddComponent<Button>();
 
         // 关闭按钮文本 "X"
-        GameObject closeTextObj = new GameObject("Text");
+        var closeTextObj = new GameObject("Text");
         closeTextObj.transform.SetParent(closeButtonObj.transform, false);
 
-        RectTransform closeTextRect = closeTextObj.AddComponent<RectTransform>();
+        var closeTextRect = closeTextObj.AddComponent<RectTransform>();
         closeTextRect.anchorMin = Vector2.zero;
         closeTextRect.anchorMax = Vector2.one;
         closeTextRect.offsetMin = Vector2.zero;
         closeTextRect.offsetMax = Vector2.zero;
 
-        TextMeshProUGUI closeText = closeTextObj.AddComponent<TextMeshProUGUI>();
+        var closeText = closeTextObj.AddComponent<TextMeshProUGUI>();
         closeText.text = "×";
         closeText.fontSize = 24;
         closeText.fontStyle = FontStyles.Bold;
@@ -684,27 +682,27 @@ internal class TerminalMainView : MonoBehaviour
         closeText.alignment = TextAlignmentOptions.Center;
 
         // ===== 2. 滚动显示区域 =====
-        GameObject scrollViewObj = new GameObject("ScrollView");
+        var scrollViewObj = new GameObject("ScrollView");
         scrollViewObj.transform.SetParent(contentObj.transform, false);
 
-        RectTransform scrollViewRect = scrollViewObj.AddComponent<RectTransform>();
+        var scrollViewRect = scrollViewObj.AddComponent<RectTransform>();
         scrollViewRect.anchorMin = new Vector2(0, 0);
         scrollViewRect.anchorMax = new Vector2(1, 1);
         scrollViewRect.pivot = new Vector2(0.5f, 0.5f);
         scrollViewRect.offsetMin = new Vector2(10, 80); // 底部留80px给输入区域（增加10px）
         scrollViewRect.offsetMax = new Vector2(-10, -60); // 顶部留60px给标题栏（50+10边距）
 
-        ScrollRect scrollRect = scrollViewObj.AddComponent<ScrollRect>();
+        var scrollRect = scrollViewObj.AddComponent<ScrollRect>();
         scrollRect.horizontal = false;
         scrollRect.vertical = true;
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
         scrollRect.scrollSensitivity = 20f;
 
         // Viewport (不显示滚动条，使用整个宽度)
-        GameObject viewportObj = new GameObject("Viewport");
+        var viewportObj = new GameObject("Viewport");
         viewportObj.transform.SetParent(scrollViewObj.transform, false);
 
-        RectTransform viewportRect = viewportObj.AddComponent<RectTransform>();
+        var viewportRect = viewportObj.AddComponent<RectTransform>();
         viewportRect.anchorMin = Vector2.zero;
         viewportRect.anchorMax = Vector2.one; // 使用整个宽度，不为滚动条留空间
         viewportRect.offsetMin = Vector2.zero;
@@ -715,10 +713,10 @@ internal class TerminalMainView : MonoBehaviour
         scrollRect.viewport = viewportRect;
 
         // Content (从底部开始布局，最新消息在下方)
-        GameObject scrollContentObj = new GameObject("Content");
+        var scrollContentObj = new GameObject("Content");
         scrollContentObj.transform.SetParent(viewportObj.transform, false);
 
-        RectTransform scrollContentRect = scrollContentObj.AddComponent<RectTransform>();
+        var scrollContentRect = scrollContentObj.AddComponent<RectTransform>();
         scrollContentRect.anchorMin = new Vector2(0, 0); // 底部锚点
         scrollContentRect.anchorMax = new Vector2(1, 0); // 底部锚点
         scrollContentRect.pivot = new Vector2(0.5f, 0); // 底部中心为轴心点
@@ -726,7 +724,7 @@ internal class TerminalMainView : MonoBehaviour
         scrollContentRect.offsetMax = Vector2.zero;
 
         // 添加 VerticalLayoutGroup 用于自动排列内容（从底部向上）
-        VerticalLayoutGroup contentLayout = scrollContentObj.AddComponent<VerticalLayoutGroup>();
+        var contentLayout = scrollContentObj.AddComponent<VerticalLayoutGroup>();
         contentLayout.childAlignment = TextAnchor.LowerLeft; // 底部对齐
         contentLayout.childControlWidth = true;
         contentLayout.childControlHeight = true;
@@ -735,7 +733,7 @@ internal class TerminalMainView : MonoBehaviour
         contentLayout.spacing = 2;
         contentLayout.padding = new RectOffset(10, 10, 10, 10);
 
-        ContentSizeFitter contentFitter = scrollContentObj.AddComponent<ContentSizeFitter>();
+        var contentFitter = scrollContentObj.AddComponent<ContentSizeFitter>();
         contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         scrollRect.content = scrollContentRect;
@@ -743,31 +741,31 @@ internal class TerminalMainView : MonoBehaviour
         // 不创建滚动条，只使用鼠标滚轮或触摸手势进行滚动
 
         // ===== 3. 底部输入区域 =====
-        GameObject inputAreaObj = new GameObject("InputArea");
+        var inputAreaObj = new GameObject("InputArea");
         inputAreaObj.transform.SetParent(contentObj.transform, false);
 
-        RectTransform inputAreaRect = inputAreaObj.AddComponent<RectTransform>();
+        var inputAreaRect = inputAreaObj.AddComponent<RectTransform>();
         inputAreaRect.anchorMin = new Vector2(0, 0); // 底部
         inputAreaRect.anchorMax = new Vector2(1, 0);
         inputAreaRect.pivot = new Vector2(0.5f, 0);
         inputAreaRect.anchoredPosition = Vector2.zero;
         inputAreaRect.sizeDelta = new Vector2(0, 70); // 高度70（增加10px）
 
-        Image inputAreaImage = inputAreaObj.AddComponent<Image>();
+        var inputAreaImage = inputAreaObj.AddComponent<Image>();
         inputAreaImage.color = new Color(0.15f, 0.15f, 0.15f, 1f);
 
         // 创建一个容器来包含选择按钮、输入框和过滤面板
-        GameObject inputContainerObj = new GameObject("InputContainer");
+        var inputContainerObj = new GameObject("InputContainer");
         inputContainerObj.transform.SetParent(inputAreaObj.transform, false);
 
-        RectTransform inputContainerRect = inputContainerObj.AddComponent<RectTransform>();
+        var inputContainerRect = inputContainerObj.AddComponent<RectTransform>();
         inputContainerRect.anchorMin = Vector2.zero;
         inputContainerRect.anchorMax = Vector2.one;
         inputContainerRect.offsetMin = Vector2.zero;
         inputContainerRect.offsetMax = Vector2.zero;
 
         // 使用 HorizontalLayoutGroup 自动布局
-        HorizontalLayoutGroup inputLayout = inputContainerObj.AddComponent<HorizontalLayoutGroup>();
+        var inputLayout = inputContainerObj.AddComponent<HorizontalLayoutGroup>();
         inputLayout.childAlignment = TextAnchor.MiddleLeft;
         inputLayout.childControlWidth = true; // 控制宽度以支持flexibleWidth
         inputLayout.childControlHeight = true; // 控制高度以保持一致
@@ -777,78 +775,78 @@ internal class TerminalMainView : MonoBehaviour
         inputLayout.padding = new RectOffset(10, 10, 10, 10);
 
         // 选择按钮（在左侧，固定宽度，显示当前选择的 Provider）
-        GameObject providerBtnObj = new GameObject("ProviderButton");
+        var providerBtnObj = new GameObject("ProviderButton");
         providerBtnObj.transform.SetParent(inputContainerObj.transform, false);
 
-        RectTransform providerBtnRect = providerBtnObj.AddComponent<RectTransform>();
-        LayoutElement providerBtnLayout = providerBtnObj.AddComponent<LayoutElement>();
+        var providerBtnRect = providerBtnObj.AddComponent<RectTransform>();
+        var providerBtnLayout = providerBtnObj.AddComponent<LayoutElement>();
         providerBtnLayout.preferredWidth = 240f; // 与过滤面板宽度一致
         providerBtnLayout.minHeight = 40;
         providerBtnLayout.preferredHeight = 40;
 
-        Image providerBtnImage = providerBtnObj.AddComponent<Image>();
+        var providerBtnImage = providerBtnObj.AddComponent<Image>();
         providerBtnImage.color = new Color(0.25f, 0.25f, 0.25f, 1f);
 
-        Button providerBtn = providerBtnObj.AddComponent<Button>();
+        var providerBtn = providerBtnObj.AddComponent<Button>();
         var providerBtnColors = providerBtn.colors;
         providerBtnColors.highlightedColor = new Color(0.35f, 0.35f, 0.35f, 1f);
         providerBtnColors.pressedColor = new Color(0.45f, 0.45f, 0.45f, 1f);
         providerBtn.colors = providerBtnColors;
 
         // 按钮内文本
-        GameObject providerBtnTextObj = new GameObject("Text");
+        var providerBtnTextObj = new GameObject("Text");
         providerBtnTextObj.transform.SetParent(providerBtnObj.transform, false);
 
-        RectTransform providerBtnTextRect = providerBtnTextObj.AddComponent<RectTransform>();
+        var providerBtnTextRect = providerBtnTextObj.AddComponent<RectTransform>();
         providerBtnTextRect.anchorMin = Vector2.zero;
         providerBtnTextRect.anchorMax = Vector2.one;
         providerBtnTextRect.offsetMin = new Vector2(10, 2);
         providerBtnTextRect.offsetMax = new Vector2(-10, -2);
 
-        TextMeshProUGUI providerBtnText = providerBtnTextObj.AddComponent<TextMeshProUGUI>();
+        var providerBtnText = providerBtnTextObj.AddComponent<TextMeshProUGUI>();
         providerBtnText.text = "Select Provider";
         providerBtnText.fontSize = 14;
         providerBtnText.color = Color.white;
         providerBtnText.alignment = TextAlignmentOptions.MidlineLeft;
 
         // 输入框（在右侧，占据剩余空间）
-        GameObject inputFieldObj = new GameObject("InputField");
+        var inputFieldObj = new GameObject("InputField");
         inputFieldObj.transform.SetParent(inputContainerObj.transform, false);
 
-        RectTransform inputFieldRect = inputFieldObj.AddComponent<RectTransform>();
+        var inputFieldRect = inputFieldObj.AddComponent<RectTransform>();
         // 使用 LayoutElement 让输入框占据剩余空间并与下拉框同高
-        LayoutElement inputFieldLayout = inputFieldObj.AddComponent<LayoutElement>();
+        var inputFieldLayout = inputFieldObj.AddComponent<LayoutElement>();
         inputFieldLayout.flexibleWidth = 1f; // 填充剩余宽度
         inputFieldLayout.minHeight = 40; // 最小高度
         inputFieldLayout.preferredHeight = 40; // 首选高度，与下拉框一致
 
-        Image inputFieldImage = inputFieldObj.AddComponent<Image>();
+        var inputFieldImage = inputFieldObj.AddComponent<Image>();
         inputFieldImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
 
-        TMP_InputField inputField = inputFieldObj.AddComponent<TMP_InputField>();
+        var inputField = inputFieldObj.AddComponent<TMP_InputField>();
         inputField.textViewport = inputFieldRect;
 
         // Input Field Text Area
-        GameObject textAreaObj = new GameObject("Text Area");
+        var textAreaObj = new GameObject("Text Area");
         textAreaObj.transform.SetParent(inputFieldObj.transform, false);
 
-        RectTransform textAreaRect = textAreaObj.AddComponent<RectTransform>();
+        var textAreaRect = textAreaObj.AddComponent<RectTransform>();
         textAreaRect.anchorMin = Vector2.zero;
         textAreaRect.anchorMax = Vector2.one;
         textAreaRect.offsetMin = new Vector2(10, 5);
         textAreaRect.offsetMax = new Vector2(-10, -5);
 
         // Placeholder
-        GameObject placeholderObj = new GameObject("Placeholder");
+        var placeholderObj = new GameObject("Placeholder");
         placeholderObj.transform.SetParent(textAreaObj.transform, false);
 
-        RectTransform placeholderRect = placeholderObj.AddComponent<RectTransform>();
+        var placeholderRect = placeholderObj.AddComponent<RectTransform>();
         placeholderRect.anchorMin = Vector2.zero;
         placeholderRect.anchorMax = Vector2.one;
         placeholderRect.offsetMin = Vector2.zero;
         placeholderRect.offsetMax = Vector2.zero;
 
-        TextMeshProUGUI placeholder = placeholderObj.AddComponent<TextMeshProUGUI>();
+        var placeholder = placeholderObj.AddComponent<TextMeshProUGUI>();
         placeholder.text = L.UI.InputPlaceholder;
         placeholder.fontSize = 14;
         placeholder.color = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -857,16 +855,16 @@ internal class TerminalMainView : MonoBehaviour
         inputField.placeholder = placeholder;
 
         // Input Text
-        GameObject inputTextObj = new GameObject("Text");
+        var inputTextObj = new GameObject("Text");
         inputTextObj.transform.SetParent(textAreaObj.transform, false);
 
-        RectTransform inputTextRect = inputTextObj.AddComponent<RectTransform>();
+        var inputTextRect = inputTextObj.AddComponent<RectTransform>();
         inputTextRect.anchorMin = Vector2.zero;
         inputTextRect.anchorMax = Vector2.one;
         inputTextRect.offsetMin = Vector2.zero;
         inputTextRect.offsetMax = Vector2.zero;
 
-        TextMeshProUGUI inputText = inputTextObj.AddComponent<TextMeshProUGUI>();
+        var inputText = inputTextObj.AddComponent<TextMeshProUGUI>();
         inputText.text = "";
         inputText.fontSize = 14;
         inputText.color = Color.white;
@@ -875,11 +873,11 @@ internal class TerminalMainView : MonoBehaviour
         inputField.textComponent = inputText;
 
         // 创建过滤面板（挂在滚动视图上，使其左下角对齐滚动视图左下角，宽度与滚动视图一致）
-        ProviderFilterPanel filterPanel = ProviderFilterPanel.Create(scrollViewObj.transform);
+        var filterPanel = ProviderFilterPanel.Create(scrollViewObj.transform);
         Log.Info("[TerminalMainView] ProviderFilterPanel created");
 
         // 添加主脚本到根对象
-        TerminalMainView mainView = rootObj.AddComponent<TerminalMainView>();
+        var mainView = rootObj.AddComponent<TerminalMainView>();
         mainView.contentPanel = contentObj;
         mainView.panelRect = rootRect;
         mainView.titleText = titleText;
