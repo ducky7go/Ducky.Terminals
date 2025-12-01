@@ -1,6 +1,5 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using Ducky.Sdk.Contracts.CommandLine;
 
 namespace Ducky.ModArk;
 

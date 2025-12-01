@@ -1,5 +1,3 @@
-using Ducky.Sdk.ModBehaviours;
-
 namespace Ducky.ModArk;
 
 public class ModBehaviour : ModBehaviourBase

@@ -1,5 +1,3 @@
-using Ducky.Sdk.Attributes;
-
 namespace Ducky.TerminalUI;
 
 [LanguageSupport("en", "zh-hant", "zh", "fr", "de", "es", "ru", "ja", "ko", "pt")]

@@ -1,9 +1,7 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using Ducky.Sdk.Contracts.CommandLine;
 using Ducky.Sdk.Utils;
 using R3;
-using UnityEngine;
 
 namespace Ducky.TerminalUI;
 

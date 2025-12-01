@@ -379,12 +379,6 @@ TerminalMainView.Instance.PostMessage("Response", MessageType.System);
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
-## 🤝 社区支持
-
-- **QQ 群**: 755123281
-- **群链接**: [逃离鸭科夫 鸭神降临 mod 技术交流](https://qm.qq.com/q/TjBZSgMOqK)
-- **GitHub Issues**: [提交问题](https://github.com/ducky7go/Ducky.Terminals/issues)
-
 ## 🙏 致谢
 
 - 《逃离鸭科夫》游戏开发团队

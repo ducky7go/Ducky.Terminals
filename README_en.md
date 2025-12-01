@@ -354,12 +354,6 @@ TerminalMainView.Instance.PostMessage("Response", MessageType.System);
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## 🤝 Community Support
-
-- **QQ Group**: 755123281
-- **Group Link**: [Escape from Duckov Mod Technical Discussion](https://qm.qq.com/q/TjBZSgMOqK)
-- **GitHub Issues**: [Submit Issues](https://github.com/ducky7go/Ducky.Terminals/issues)
-
 ## 🙏 Acknowledgments
 
 - "Escape from Duckov" game development team

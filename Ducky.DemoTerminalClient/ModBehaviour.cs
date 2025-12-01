@@ -1,6 +1,4 @@
-﻿using Ducky.Sdk.ModBehaviours;
-
-namespace Ducky.DemoTerminalClient;
+﻿namespace Ducky.DemoTerminalClient;
 
 public class ModBehaviour : ModBehaviourBase
 {

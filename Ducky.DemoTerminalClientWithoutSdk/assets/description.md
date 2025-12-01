@@ -16,11 +16,6 @@ This project includes:
 * Basic protocol implementation without SDK dependencies
 By studying this code, you can understand how the Ducky SDK works under the hood and implement custom integrations if needed.
 If you are a mod author and want to integrate your mod into the console, please visit [https://github.com/ducky7go/Ducky.Terminals](https://github.com/ducky7go/Ducky.Terminals) for integration help.
-## 🔗 Community Support
-If you encounter issues, have feature suggestions, or want to share experiences with other users, join our community for support:
-* **QQ Group**: 755123281
-* **Group Link**: [逃离鸭科夫 鸭神降临 mod 技术交流](https://qm.qq.com/q/TjBZSgMOqK)
-* source:[https://github.com/ducky7go/Ducky.Terminals](https://github.com/ducky7go/Ducky.Terminals)
 ***
 ### Ducky TerminalUI 命令演示插件（无 SDK 版本）：基础实现示例
 这是一个**不使用 Ducky SDK** 构建的演示项目，展示如何手动实现 TerminalUI 命令。它演示了与 Ducky TerminalUI 交互所需的基本通信协议和契约实现，无需 SDK 依赖。
@@ -39,9 +34,3 @@ If you encounter issues, have feature suggestions, or want to share experiences 
 * 无 SDK 依赖的基础协议实现
 通过研究此代码，您可以理解 Ducky SDK 的底层工作原理，并在需要时实现自定义集成。
 作为 mod 作者，如果你要想为你的 mod 集成进入控制台，可以查看 [https://github.com/ducky7go/Ducky.Terminals](https://github.com/ducky7go/Ducky.Terminals) 来获取对接帮助。
-## 🔗 社群支持
-若在使用过程中遇到问题、有功能建议，或想与其他用户交流经验，可加入社群获取支持：
-* **QQ 群号**：755123281
-* **群链接**：[逃离鸭科夫 鸭神降临 mod 技术交流](https://qm.qq.com/q/TjBZSgMOqK)
-* source:[https://github.com/ducky7go/Ducky.Terminals](https://github.com/ducky7go/Ducky.Terminals)
-

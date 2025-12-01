@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using R3;
 using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Ducky.TerminalUI;
 
