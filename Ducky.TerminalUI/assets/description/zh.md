@@ -25,8 +25,6 @@
 在创意工坊搜索更多兼容模组，或查看 GitHub 仓库获取支持模组列表。
 ## 面向模组作者
 想将你的模组集成到终端界面？访问 https://github.com/ducky7go/Ducky.Terminals 获取完整的集成指南、API 文档和代码示例。支持基于 SDK（推荐）和手动集成两种方式。
-## 社群与支持
-加入社群获取帮助、提出建议或交流经验：
-- QQ 群号：755123281
-- 群链接：https://qm.qq.com/q/TjBZSgMOqK
-
+## 🔗 技术支持
+需要技术支持、Bug反馈或建议？
+请访问 **[Contact Me Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3613778329)** 查看联系方式

@@ -25,7 +25,3 @@
 Steam Workshop에서 호환되는 모든 모드를 검색하거나 GitHub 저장소에서 지원되는 모드 목록을 확인하세요.
 ## 모드 개발자를 위하여
 당신의 모드를 터미널 UI와 통합하고 싶으신가요? 완전한 통합 가이드, API 문서 및 코드 예제는 https://github.com/ducky7go/Ducky.Terminals를 방문하세요. SDK 기반(권장) 및 수동 통합 방법을 모두 지원합니다.
-## 커뮤니티 및 지원
-도움, 제안 및 토론을 위해 저희 커뮤니티에 가입하세요:
-- QQ 그룹: 755123281
-- 그룹 링크: https://qm.qq.com/q/TjBZSgMOqK

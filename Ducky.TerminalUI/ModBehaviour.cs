@@ -1,7 +1,4 @@
-﻿using Ducky.Sdk.ModBehaviours;
-using UnityEngine;
-
-namespace Ducky.TerminalUI;
+﻿namespace Ducky.TerminalUI;
 
 public class ModBehaviour : ModBehaviourBase
 {

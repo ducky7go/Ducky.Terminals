@@ -1,5 +1,3 @@
-using Ducky.Sdk.Attributes;
-
 namespace Ducky.ModArk;
 
 [LanguageSupport("en", "zh-Hant", "zh", "fr", "de", "es", "ru", "ja", "ko", "pt")]

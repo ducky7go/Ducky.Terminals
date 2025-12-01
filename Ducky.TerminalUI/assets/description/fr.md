@@ -25,7 +25,3 @@ Ce mod fournit uniquement le framework d'interface. Pour expérimenter la foncti
 Recherchez plus de mods compatibles sur le Steam Workshop ou consultez le dépôt GitHub pour une liste des mods supportés.
 ## Pour les Développeurs de Mods
 Vous voulez intégrer votre mod avec l'Interface Terminal ? Visitez https://github.com/ducky7go/Ducky.Terminals pour des guides d'intégration complets, une documentation API et des exemples de code. Supporte les méthodes d'intégration basées sur SDK (recommandé) et manuelles.
-## Communauté & Support
-Rejoignez notre communauté pour obtenir de l'aide, des suggestions et des discussions :
-- Groupe QQ : 755123281
-- Lien du groupe : https://qm.qq.com/q/TjBZSgMOqK
