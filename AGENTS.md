@@ -200,126 +200,20 @@ Projects reference Unity/game assemblies from `$(ManagedDirectory)`:
 
 ## Localization & Multi-Language Support
 
-### Localization System
-The project uses **Ducky.Sdk's built-in localization system** with CSV-based translation files.
+Uses Ducky.Sdk's built-in CSV localization. `Ducky.TerminalUI/LK.cs` and `Ducky.ModArk/LK.cs` declare keys as `const string` (snake_case) in nested static classes (`LK.UI`, `LK.Terminal`) under `[LanguageSupport("en", "zh-hant", "zh", "fr", "de", "es", "ru", "ja", "ko", "pt")]`; the SDK generates the `L.{Category}.{Key}` accessors that return text for the current game language.
 
-**Supported Languages** (10 total):
-- `en` - English
-- `zh` - Chinese Simplified (简体中文)
-- `zh-hant` - Chinese Traditional (繁體中文)
-- `ja` - Japanese (日本語)
-- `ko` - Korean (한국어)
-- `fr` - French (Français)
-- `de` - German (Deutsch)
-- `es` - Spanish (Español)
-- `ru` - Russian (Русский)
-- `pt` - Portuguese (Português)
-
-### File Structure
-```
-Ducky.TerminalUI/
-  └─ assets/
-     └─ Locales/
-        ├─ en.csv
-        ├─ zh.csv
-        ├─ zh-hant.csv
-        ├─ ja.csv
-        ├─ ko.csv
-        ├─ fr.csv
-        ├─ de.csv
-        ├─ es.csv
-        ├─ ru.csv
-        └─ pt.csv
-  └─ LK.cs  # Language Key definitions
-```
-
-### How to Use Localization
-
-#### 1. Define Language Keys in `LK.cs`
-```csharp
-using Ducky.Sdk.Attributes;
-
-[LanguageSupport("en", "zh-Hant", "zh", "fr", "de", "es", "ru", "ja", "ko", "pt")]
-public static class LK
-{
-    public static class UI
-    {
-        public const string InputPlaceholder = "terminal_input_placeholder";
-        public const string TerminalTitle = "terminal_title";
-    }
-}
-```
-
-- Use `[LanguageSupport]` attribute to declare supported languages
-- Organize keys in nested static classes (e.g., `LK.UI`, `LK.Commands`, etc.)
-- Keys are `const string` with snake_case naming
-
-#### 2. Build and Auto-Generate CSV Files
-When you build the project, Ducky.Sdk automatically:
-- Generates CSV files for all supported languages in `assets/Locales/`
-- Creates missing keys in existing CSV files
-- Preserves existing translations
-
-**Example auto-generated CSV (`zh.csv`):**
-```csv
-Key,Value
-terminal_input_placeholder,"请输入 # 可以快速搜索mod"
-terminal_title,"终端"
-```
-
-**Important**: 
-- CSV files are auto-generated - edit `LK.cs` only to add new keys
-- After build, manually fill in translations in the generated CSV files
-- Always quote values containing special characters or commas
-- Empty values will fall back to the key name
-
-#### 3. Fill in Translations
-After the first build generates CSV files with empty values:
-1. Open each language's CSV file (e.g., `zh.csv`, `en.csv`, etc.)
-2. Fill in the translated values for each key
-3. Rebuild the project
-
-#### 4. Use Translations in Code
-The Ducky.Sdk build system auto-generates the `L` class from `LK` definitions:
-
-```csharp
-// In TerminalMainView.cs
-titleText.text = L.UI.TerminalTitle;          // Returns translated text based on game language
-placeholder.text = L.UI.InputPlaceholder;      // Automatically selects correct CSV file
-```
-
-**Pattern**: `L.{Category}.{KeyName}` → returns translated string for current game language
-
-#### 5. Build Process Summary
-1. Define keys in `LK.cs` with `[LanguageSupport]` attribute
-2. Build project → Ducky.Sdk auto-generates CSV files with empty values
-3. Manually fill in translations in all CSV files under `assets/Locales/`
-4. Rebuild → `L` class is generated with all translations
-5. Use `L.UI.xxx` in code to access translations
-
-### Current Translations
-| Key | English | 中文 (简体) |
-|-----|---------|------------|
-| `terminal_title` | Terminal | 终端 |
-| `terminal_input_placeholder` | Enter # to quickly search mods | 请输入 # 可以快速搜索mod |
-
-### Adding New Translations
-1. Add constant to `LK.cs` (e.g., `public const string NewKey = "new_key";`)
-2. Build project → CSV files are auto-generated/updated with the new key (empty values)
-3. Manually fill in translations for the new key in all 10 CSV files
-4. Rebuild project to regenerate `L` class with new translations
-5. Use `L.UI.NewKey` in code
+Adding a key:
+1. Add the `const string` to `LK.cs` (do not hand-edit `lkeys.json` / `keys.hash.txt`).
+2. Build: the SDK creates or updates `assets/Locales/{lang}.csv` for all 10 languages (new keys get empty values, existing translations are preserved).
+3. Fill in the translation in every CSV (`Key,Value`; quote values containing special characters or commas; an empty value falls back to the key name).
+4. Rebuild and use `L.{Category}.{Key}` in code.
 
 ## Common Patterns & Anti-Patterns
 
 ### ✅ Correct Patterns
-- Use `ModAsynchronousCommandLineAction` for command handlers (auto-routes responses)
-- Call `.Forget()` on fire-and-forget UniTasks
 - Use singleton pattern for protocol managers (`GetOrCreate(modId)`)
 - Normalize line endings: `.Replace("\r\n", "\n").Replace("\r", "\n")`
 - JSON-serialize multiline strings for `show` command: `TerminalUICommand.Show(content)`
-- Use `L.{Category}.{Key}` for all user-facing text (enables multi-language support)
-- Keep CSV files in sync - all languages should have the same keys
 
 ### ❌ Anti-Patterns
 - Don't block UI thread with synchronous I/O
@@ -336,13 +230,6 @@ placeholder.text = L.UI.InputPlaceholder;      // Automatically selects correct 
 - Verify ModId format: `steam.{publishedFileId}` or `local.{modName}`
 - Test `ping`/`pong` command first to verify connection
 - Use `/? ` or `help` commands to test System.CommandLine parsing
-
-## Target Framework & Build Environment
-- **Target**: .NET Standard 2.1 (Unity compatibility)
-- **Language**: C# with preview features, nullable enabled
-- **Build Tool**: .NET SDK (not full .NET Framework)
-- **Solution Format**: `.slnx` (new VS solution format)
-- **Output**: Mod DLLs deployed to game's `Duckov_Data/Mods/` folder
 
 ## Naming Conventions
 - **ModId**: Unique identifier (e.g., `steam.3606789816`, `local.Ducky.TerminalUI`)
