@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "preview": {
+   "positive": "masterpiece, best quality, safe, no humans, duck, solo, upper body, console, holographic, monitor, window, glowing, sitting, dark, indoors, flat color, bold outlines, cartoon style, vivid colors, cyan glow, futuristic, control room, A cartoon duck sits in a futuristic control room and fills the left and center of the frame from the waist up, conducting several floating holographic panels with its wings. The panels glow cyan and magenta and show simple charts, buttons and a blinking cursor. Cyan light comes from the panels on the right and deep navy shadows fill the room. The lower right of the frame is a dark, quiet console surface with a soft vignette.",
+   "negative": "worst quality, low quality, watermark, logo, text, signature, letters, humans, blurry, deformed, border, frame, tiny subject, empty background, multiple ducks",
+   "width": 1344,
+   "height": 768,
+   "unet": "anima-turbo-v1.1.safetensors",
+   "sampler": {
+    "steps": 10,
+    "cfg": 2,
+    "sampler": "euler",
+    "scheduler": "simple"
+   },
+   "seed": 11,
+   "_note": "img-gen steam-preview base: render with ab-prompt-test.mjs --seeds 11, then compose-preview.sh --base art/preview-base.png --out assets/preview.png"
+  }
+ }
+}
