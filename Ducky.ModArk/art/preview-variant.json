@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "preview": {
+   "positive": "masterpiece, best quality, safe, no humans, duck, solo, ship, boat, ocean, storm, puzzle piece, box, lightning, rain, sailor hat, flat color, bold outlines, cartoon style, vivid colors, adventurous, dramatic, wooden ark, A cartoon duck in a captain's hat stands at the wheel of a sturdy wooden ark and fills the left and center of the frame, the deck piled with glowing puzzle-piece crates held safely under rope. The ark rides big blue waves under a stormy sky with a lightning bolt in the distance, and a warm lantern lights the deck. Warm lantern light comes from the left and deep teal shadows fill the sea. The lower right of the frame is dark, quiet rolling waves with a soft vignette.",
+   "negative": "worst quality, low quality, watermark, logo, text, signature, letters, humans, blurry, deformed, border, frame, tiny subject, empty background, multiple ducks",
+   "width": 1344,
+   "height": 768,
+   "unet": "anima-turbo-v1.1.safetensors",
+   "sampler": {
+    "steps": 10,
+    "cfg": 2,
+    "sampler": "euler",
+    "scheduler": "simple"
+   },
+   "seed": 33,
+   "_note": "img-gen steam-preview base: render with ab-prompt-test.mjs --seeds 33, then compose-preview.sh --base art/preview-base.png --out assets/preview.png"
+  }
+ }
+}
