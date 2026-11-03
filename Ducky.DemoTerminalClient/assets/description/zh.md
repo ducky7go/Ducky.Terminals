@@ -36,6 +36,3 @@
 * 做需要可选输入的命令，复用 **heal** 的参数逻辑。
 * 做需要必填开关的命令，参考 **god** 的结构。
 作为 mod 作者，如果你要想为你的 mod 集成进入控制台，可以查看 [https://github.com/ducky7go/Ducky.Terminals](https://github.com/ducky7go/Ducky.Terminals) 来获取对接帮助。
-## 🔗 技术支持
-需要技术支持、Bug反馈或建议？
-请访问 **[Contact Me Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3613778329)** 查看联系方式

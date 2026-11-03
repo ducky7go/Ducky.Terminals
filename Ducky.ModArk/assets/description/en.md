@@ -20,6 +20,3 @@ Mod Ark keeps your Escape from Duckov mod list safe by snapshotting subscription
 Use descriptive backup names (e.g., **pre_update_run**). Invalid filename characters are automatically sanitized.
 ### Restore Confirmation
 Restore replaces your current configuration. Review the backup JSON before running **restore --yes**.
-## 🔗 Technical Support
-Need technical support, bug reports, or suggestions?
-Please visit **[Contact Me Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3613778329)** for contact information

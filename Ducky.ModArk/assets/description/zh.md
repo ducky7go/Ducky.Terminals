@@ -19,6 +19,3 @@ Mod Ark 让你的《逃离鸭科夫》模组列表随时可备份、可还原：
 建议使用能描述场景的名称（例如 **更新前备份**），文件名中的非法字符会被自动替换。
 ### 还原确认
 还原会覆盖现有配置。执行 **restore --yes** 前请检查备份 JSON 内容是否正确。
-## 🔗 技术支持
-需要技术支持、Bug反馈或建议？
-请访问 **[Contact Me Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3613778329)** 查看联系方式

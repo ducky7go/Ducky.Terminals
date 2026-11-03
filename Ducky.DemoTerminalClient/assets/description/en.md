@@ -37,6 +37,3 @@ Each command includes complete TerminalUI interaction code (from input to feedba
 * Reuse the **heal** parameter logic for commands that need optional inputs.
 * Reference the **god** structure for commands that require mandatory switches.
 If you are a mod author and want to integrate your mod into the console, please visit [https://github.com/ducky7go/Ducky.Terminals](https://github.com/ducky7go/Ducky.Terminals) for integration help.
-## 🔗 Technical Support
-Need technical support, bug reports, or suggestions?
-Please visit **[Contact Me Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3613778329)** for contact information
