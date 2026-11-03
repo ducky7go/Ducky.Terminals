@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "preview": {
+   "positive": "masterpiece, best quality, safe, no humans, duck, solo, upper body, wire, cable, soldering iron, terminal, monitor, sparks, dark, indoors, flat color, bold outlines, cartoon style, vivid colors, retro, amber glow, handmade, A cartoon duck holds a bare wire in one wing and a soldering iron in the other and fills the left and center of the frame from the waist up, connecting a retro terminal by hand. The screen glows amber with a blinking cursor and orange sparks fly from the soldered joint. Amber light comes from the right and deep brown shadows fill the room. The lower right of the frame is a dark, quiet workbench with a soft vignette.",
+   "negative": "worst quality, low quality, watermark, logo, text, signature, letters, humans, blurry, deformed, border, frame, tiny subject, empty background, multiple ducks",
+   "width": 1344,
+   "height": 768,
+   "unet": "anima-turbo-v1.1.safetensors",
+   "sampler": {
+    "steps": 10,
+    "cfg": 2,
+    "sampler": "euler",
+    "scheduler": "simple"
+   },
+   "seed": 11,
+   "_note": "img-gen steam-preview base: render with ab-prompt-test.mjs --seeds 11, then compose-preview.sh --base art/preview-base.png --out assets/preview.png"
+  }
+ }
+}
