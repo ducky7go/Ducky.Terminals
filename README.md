@@ -4,48 +4,15 @@
 
 ## 📖 项目简介
 
-**Ducky.Terminals** 是一个为 Unity 游戏《逃离鸭科夫》(Escape from Duckov) 开发的终端控制台框架。它提供了一个可视化的终端界面和 mod 之间的通信系统，允许 mod 开发者为他们的 mod 创建命令行界面。
+**Ducky.Terminals** 是一个为 Unity 游戏《逃离鸭科夫》(Escape from Duckov) 开发的终端控制台框架。它提供 mod 之间的通信协议，允许 mod 开发者为他们的 mod 暴露命令行接口，由兼容的终端界面 mod 展示和路由命令。本仓库已不再包含终端界面 mod `Ducky.TerminalUI`。
 
 ### 核心特性
 
-- 🎮 **游戏内终端界面** - 可视化的命令行界面，支持滑动显示/隐藏
+- 🎮 **游戏内终端** - 命令通过兼容的终端界面 mod 在游戏内输入和显示
 - 🔌 **Mod 通信系统** - 基于消息总线的 mod 间通信协议
 - 🛠️ **命令解析框架** - 集成 `System.CommandLine` 库，支持参数、选项等标准命令行特性
 - 🎯 **Provider 过滤系统** - 通过 `#` 前缀快速选择目标 mod
 - 📦 **两种集成方式** - 支持使用 Ducky.Sdk 或手动集成
-
-### 项目组件
-
-| 组件 | 说明 | Steam Workshop |
-|------|------|----------------|
-| **Ducky.TerminalUI** | 终端 UI 主程序，负责显示界面和路由命令 | [3606793704](https://steamcommunity.com/sharedfiles/filedetails/?id=3606793704) |
-| **Ducky.DemoTerminalClient** | 使用 Ducky.Sdk 的示例客户端（推荐方式） | [3606789816](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789816) |
-| **Ducky.DemoTerminalClientWithoutSdk** | 不使用 SDK 的手动集成示例 | [3606789962](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789962) |
-| **Ducky.ModArk** | “模组方舟”——备份/还原 Steam 订阅、排序与启用状态的终端工具 | [3607456411](https://steamcommunity.com/sharedfiles/filedetails/?id=3607456411) |
-
-## 🛟 Ducky.ModArk 快速了解
-
-`Ducky.ModArk` 是内置在本仓库中的“模组配置守护者”。它通过终端命令对接 `ModArkBackupService`（`Ducky.ModArk/ModArkBackupService.cs`）与 `ModStateRepository`，可以：
-
-- 读取当前 Steam 订阅 (`SteamUGC`) 与游戏内 `ModManager.modInfos`，并生成 `backup.json` 快照（结构见 `BackupModels.cs`）
-- 监听 `backup`/`restore` 命令（`TerminalEntry.cs` 使用 `System.CommandLine`），并把重要日志实时转发到终端
-- 在还原时计算需要订阅/退订的差异、重新应用排序与启用状态，并在 `--yes` 未提供时只输出计划而不执行
-- 通过 `Application.OpenURL` 引导玩家打开备份或还原目录，方便拖拽 JSON 文件
-
-### 运行前准备
-- 启用 `Ducky.TerminalUI`（用于打开终端界面）以及 `Ducky.ModArk`
-- 确认 Steam 处于初始化状态；否则备份/还原会直接返回错误提示
-
-### 常用终端命令
-```bash
-# 创建一次快照，名称会被自动清洗以构造成合法文件夹
-modark backup pre_patch_test
-
-# 按提示把 backup.json 放入临时目录后执行还原
-modark restore --yes
-```
-
-终端中也可以输入 `help` 或 `backup --help` 查看自动生成的说明。所有命令都会使用 `L.Terminal.*` 的多语言字符串（定义在 `Ducky.ModArk/LK.cs`，译文位于 `assets/Locales/*.csv`）对不同语言玩家保持一致体验。
 
 ## � 为什么要对接终端控制台？
 
@@ -174,7 +141,7 @@ dotnet build Ducky.Terminals.slnx
 ### 游戏内使用
 
 1. 启动游戏，mod 会自动加载
-2. 触发终端界面（在游戏界面左侧边缘区域）
+2. 通过终端界面 mod 打开终端
 3. 输入 `#` 查看可用的 mod provider
 4. 选择 provider 后输入命令，例如：`time`、`heal --amount 50`
 
@@ -276,21 +243,19 @@ public class ModCommandLineEntry
 
 ### 方式二：手动集成（不使用 SDK）
 
-参考 `Ducky.DemoTerminalClientWithoutSdk` 项目：
+手动集成需要完成以下部分：
 
 1. 实现 `ModHttpV1Proxy` - 通过反射访问游戏的 ModHttpV1 组件
 2. 实现 `ModHttpV1ClientContract` - 封装底层通信
 3. 实现 `ModTerminalClientContract` - 封装终端协议
 4. 手动引用游戏 DLL 文件
 
-详细示例代码请查看 [Ducky.DemoTerminalClientWithoutSdk](./Ducky.DemoTerminalClientWithoutSdk) 文件夹。
-
 ## 📚 关键概念
 
 ### ModId 格式
 
-- **Steam Mod**: `steam.{publishedFileId}` （例如：`steam.3606789816`）
-- **本地 Mod**: `local.{modName}` （例如：`local.Ducky.TerminalUI`）
+- **Steam Mod**: `steam.{publishedFileId}` （例如：`steam.1234567890`）
+- **本地 Mod**: `local.{modName}` （例如：`local.MyMod`）
 
 ### ProviderId
 
@@ -337,9 +302,9 @@ await client.ShowToTerminal("response message");
 ```
 用户输入命令
     ↓
-TerminalUI 接收 (TerminalViewModel)
+终端界面 mod 接收命令
     ↓
-通过 ModHttpV1 发送到目标 ModId (TerminalUIProtocol)
+通过 ModHttpV1 发送到目标 ModId
     ↓
 目标 Mod 接收消息 (ModTerminalClientContract)
     ↓
@@ -349,22 +314,7 @@ System.CommandLine 解析命令 (ModCommandLineEntry)
     ↓
 返回响应 (ModAsynchronousCommandLineAction)
     ↓
-TerminalUI 显示结果 (TerminalMainView)
-```
-
-### MVVM 模式（TerminalUI）
-
-TerminalUI 使用 **R3** (Reactive Extensions) 实现响应式编程：
-
-- `ReactiveProperty<T>` - 可观察属性，带变更通知
-- `ReactiveCommand<T>` - 命令模式实现
-- `Subject<T>` - 单向事件流
-- `.AddTo(disposables)` - 自动管理生命周期
-
-**线程安全**: UI 更新必须在主线程。使用 `PostMessage()` 进行跨线程消息传递：
-```csharp
-// 线程安全：消息入队，通过协程在主线程处理
-TerminalMainView.Instance.PostMessage("Response", MessageType.System);
+终端界面 mod 显示结果
 ```
 
 ## 🐛 调试技巧
@@ -383,7 +333,6 @@ TerminalMainView.Instance.PostMessage("Response", MessageType.System);
 
 - 《逃离鸭科夫》游戏开发团队
 - Ducky.Sdk 开发者
-- R3 (Reactive Extensions)
 - System.CommandLine
 
 ## 📦 相关链接
@@ -391,4 +340,3 @@ TerminalMainView.Instance.PostMessage("Response", MessageType.System);
 - [Ducky.Sdk NuGet Package](https://www.nuget.org/packages/Ducky.Sdk)
 - [System.CommandLine Documentation](https://learn.microsoft.com/en-us/dotnet/standard/commandline/)
 - [UniTask](https://github.com/Cysharp/UniTask)
-- [R3 (Reactive Extensions)](https://github.com/Cysharp/R3)

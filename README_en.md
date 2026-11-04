@@ -4,23 +4,15 @@ English | [简体中文](./README.md)
 
 ## 📖 Project Overview
 
-**Ducky.Terminals** is a terminal console framework developed for the Unity-based game "Escape from Duckov" (逃离鸭科夫). It provides a visual terminal UI and an inter-mod communication system that allows mod developers to create command-line interfaces for their mods.
+**Ducky.Terminals** is a terminal console framework developed for the Unity-based game "Escape from Duckov" (逃离鸭科夫). It provides an inter-mod communication protocol that allows mod developers to expose command-line interfaces for their mods to a compatible terminal UI mod. The `Ducky.TerminalUI` mod has been removed from this repo, so a compatible terminal UI mod must be installed separately.
 
 ### Core Features
 
-- 🎮 **In-Game Terminal UI** - Visual command-line interface with slide-in/out animation
+- 🎮 **In-Game Terminal** - Commands are entered and displayed through a compatible terminal UI mod
 - 🔌 **Mod Communication System** - Message bus-based inter-mod communication protocol
 - 🛠️ **Command Parsing Framework** - Integrated `System.CommandLine` library with support for arguments, options, and standard CLI features
 - 🎯 **Provider Filter System** - Quick mod selection using `#` prefix
 - 📦 **Two Integration Methods** - Support for both Ducky.Sdk and manual integration
-
-### Project Components
-
-| Component | Description | Steam Workshop |
-|-----------|-------------|----------------|
-| **Ducky.TerminalUI** | Main terminal UI program, handles display and command routing | [3606793704](https://steamcommunity.com/sharedfiles/filedetails/?id=3606793704) |
-| **Ducky.DemoTerminalClient** | Example client using Ducky.Sdk (recommended) | [3606789816](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789816) |
-| **Ducky.DemoTerminalClientWithoutSdk** | Manual integration example without SDK | [3606789962](https://steamcommunity.com/sharedfiles/filedetails/?id=3606789962) |
 
 ## � Why Integrate with the Terminal Console?
 
@@ -251,21 +243,19 @@ public class ModCommandLineEntry
 
 ### Method 2: Manual Integration (Without SDK)
 
-Refer to the `Ducky.DemoTerminalClientWithoutSdk` project:
+Manual integration requires these parts:
 
 1. Implement `ModHttpV1Proxy` - Access game's ModHttpV1 component via reflection
 2. Implement `ModHttpV1ClientContract` - Encapsulate low-level communication
 3. Implement `ModTerminalClientContract` - Encapsulate terminal protocol
 4. Manually reference game DLL files
 
-For detailed example code, check the [Ducky.DemoTerminalClientWithoutSdk](./Ducky.DemoTerminalClientWithoutSdk) folder.
-
 ## 📚 Key Concepts
 
 ### ModId Format
 
-- **Steam Mod**: `steam.{publishedFileId}` (e.g., `steam.3606789816`)
-- **Local Mod**: `local.{modName}` (e.g., `local.Ducky.TerminalUI`)
+- **Steam Mod**: `steam.{publishedFileId}` (e.g., `steam.1234567890`)
+- **Local Mod**: `local.{modName}` (e.g., `local.MyMod`)
 
 ### ProviderId
 
@@ -312,9 +302,9 @@ await client.ShowToTerminal("response message");
 ```
 User Input Command
     ↓
-TerminalUI Receives (TerminalViewModel)
+Terminal UI Mod Receives Command
     ↓
-Send to Target ModId via ModHttpV1 (TerminalUIProtocol)
+Send to Target ModId via ModHttpV1
     ↓
 Target Mod Receives Message (ModTerminalClientContract)
     ↓
@@ -324,22 +314,7 @@ Execute Command Logic
     ↓
 Return Response (ModAsynchronousCommandLineAction)
     ↓
-TerminalUI Displays Result (TerminalMainView)
-```
-
-### MVVM Pattern (TerminalUI)
-
-TerminalUI uses **R3** (Reactive Extensions) for reactive programming:
-
-- `ReactiveProperty<T>` - Observable property with change notifications
-- `ReactiveCommand<T>` - Command pattern implementation
-- `Subject<T>` - One-way event stream
-- `.AddTo(disposables)` - Automatic lifecycle management
-
-**Thread Safety**: UI updates must occur on main thread. Use `PostMessage()` for cross-thread messaging:
-```csharp
-// Thread-safe: queues message, processes on main thread via coroutine
-TerminalMainView.Instance.PostMessage("Response", MessageType.System);
+Terminal UI Mod Displays Result
 ```
 
 ## 🐛 Debugging Tips
@@ -358,7 +333,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - "Escape from Duckov" game development team
 - Ducky.Sdk developers
-- R3 (Reactive Extensions)
 - System.CommandLine
 
 ## 📦 Related Links
@@ -366,4 +340,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Ducky.Sdk NuGet Package](https://www.nuget.org/packages/Ducky.Sdk)
 - [System.CommandLine Documentation](https://learn.microsoft.com/en-us/dotnet/standard/commandline/)
 - [UniTask](https://github.com/Cysharp/UniTask)
-- [R3 (Reactive Extensions)](https://github.com/Cysharp/R3)
