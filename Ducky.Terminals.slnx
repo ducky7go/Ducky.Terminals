@@ -4,8 +4,4 @@
     <File Path="Directory.Packages.props" />
     <File Path="nuget.config" />
   </Folder>
-  <Project Path="Ducky.DemoTerminalClientWithoutSdk/Ducky.DemoTerminalClientWithoutSdk.csproj" />
-  <Project Path="Ducky.DemoTerminalClient\Ducky.DemoTerminalClient.csproj" />
-  <Project Path="Ducky.TerminalUI\Ducky.TerminalUI.csproj" />
-  <Project Path="Ducky.ModArk\Ducky.ModArk.csproj" />
 </Solution>
